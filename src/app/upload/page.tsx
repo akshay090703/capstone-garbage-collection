@@ -29,8 +29,8 @@ export default function Upload() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         if (file) {
-            // In a real application, you would upload the file to your server here
-            // For this example, we'll just redirect to the results page
+            // yahan apna backend api call karna hai
+            console.log(file);
             router.push('/result')
         }
     }
