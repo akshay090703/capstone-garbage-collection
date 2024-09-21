@@ -26,14 +26,30 @@ export default function Upload() {
         }
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (file) {
-            // yahan apna backend api call karna hai
-            console.log(file);
-            router.push('/result')
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('http://localhost:5000/predict', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    router.push(`/result?predictedClass=${data.material}`);
+                } else {
+                    alert('Failed to classify the image');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the file');
+            }
         }
-    }
+    };
 
     return (
         <div className="container mx-auto py-10">
