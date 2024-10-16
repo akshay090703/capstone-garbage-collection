@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import toast, { Toaster } from 'react-hot-toast';
 
 interface User {
     id: string
@@ -64,13 +65,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 localStorage.setItem('token', data.token);
                 console.log('Token saved:', data.token);
                 await checkAuth();
+                toast.success('Login successful');
 
                 router.push('/')
             } else {
-                console.error('Login failed')
+                console.error('Invalid email or password')
+                toast.error('Invalid email or password');
             }
         } catch (error) {
             console.error('Login error:', error)
+            toast.error('An error occurred while logging in');
         }
     }
 
@@ -85,7 +89,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (response.ok) {
             setUser(null)
             localStorage.removeItem('token');
+            toast.success('Logout successful');
             router.push('/login')
+        } else {
+            toast.error('Logout failed');
         }
     }
 
@@ -97,12 +104,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 body: JSON.stringify({ name, email, password }),
             })
             if (response.ok) {
+                toast.success('Signup successful');
                 router.push('/login')
             } else {
                 console.error('Signup failed')
+                toast.error('Signup failed');
             }
         } catch (error) {
             console.error('Signup error:', error)
+            toast.error('An error occurred while signing up');
         }
     }
 

@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { AuthProvider } from '@/lib/auth'
 import { MainNav } from '@/components/main-nav'
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,6 +35,7 @@ export default function RootLayout({
               </header>
 
               <div className="flex-1 relative z-10">{children}</div>
+              <Toaster position='top-center' toastOptions={{ className: 'z-[2000]', duration: 5000 }} />
             </div>
           </AuthProvider>
         </ThemeProvider>

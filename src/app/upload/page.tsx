@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
 import { Upload as UploadIcon, Image as ImageIcon } from 'lucide-react'
+import { useAuth } from '@/lib/auth'
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Upload() {
     const [file, setFile] = useState<File | null>(null)
@@ -46,14 +48,16 @@ export default function Upload() {
                     router.push(`/result?predictedClass=${data.material}`);
                 } else {
                     const errorData = await response.json(); // Get the error message
-                    alert(`Failed to classify the image: ${errorData.error || 'Unknown error'}`);
+                    // alert(`Failed to classify the image: ${errorData.error || 'Unknown error'}`);
+                    toast.error('Please login first!');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while uploading the file');
+                // alert('An error occurred while uploading the file');
+                toast.error('An error occurred while uploading the file');
             }
         } else {
-            alert('Please select a file to upload.');
+            toast.error('Please select a file to upload.');
         }
     };
 

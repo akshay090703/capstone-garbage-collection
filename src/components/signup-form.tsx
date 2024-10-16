@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { motion } from 'framer-motion'
 import { UserPlus } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
+import toast, { Toaster } from 'react-hot-toast';
 
 export function SignupForm() {
     const [name, setName] = useState('')
@@ -20,21 +21,6 @@ export function SignupForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         signup(name, email, password);
-        // try {
-        //     const response = await fetch('http://localhost:5000/auth/signup', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ name, email, password }),
-        //     })
-        //     if (response.ok) {
-        //         router.push('/login')
-        //     } else {
-        //         // Handle error
-        //         console.error('Signup failed')
-        //     }
-        // } catch (error) {
-        //     console.error('Signup error:', error)
-        // }
     }
 
     return (
@@ -49,7 +35,7 @@ export function SignupForm() {
                         <Input
                             id="name"
                             type="text"
-                            placeholder="John Doe"
+                            placeholder="Name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required

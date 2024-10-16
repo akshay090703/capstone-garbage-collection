@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { motion } from 'framer-motion'
 import { LogIn } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
+import toast, { Toaster } from 'react-hot-toast';
 
 export function LoginForm() {
     const [email, setEmail] = useState('')
@@ -18,25 +19,8 @@ export function LoginForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        login(email, password);
-        // try {
-        //     const response = await fetch('http://localhost:5000/auth/login', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ email, password }),
-        //     })
-        //     if (response.ok) {
-        //         const data = await response.json();
-        //         localStorage.setItem('token', data.token);
-        //         console.log('Token saved:', data.token);
 
-        //         router.push('/')
-        //     } else {
-        //         console.error('Login failed')
-        //     }
-        // } catch (error) {
-        //     console.error('Login error:', error)
-        // }
+        login(email, password);
     }
 
     return (
