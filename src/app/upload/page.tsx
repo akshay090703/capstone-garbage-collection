@@ -35,6 +35,9 @@ export default function Upload() {
             try {
                 const response = await fetch('http://localhost:5000/predict', {
                     method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    },
                     body: formData,
                 });
 
@@ -42,14 +45,18 @@ export default function Upload() {
                     const data = await response.json();
                     router.push(`/result?predictedClass=${data.material}`);
                 } else {
-                    alert('Failed to classify the image');
+                    const errorData = await response.json(); // Get the error message
+                    alert(`Failed to classify the image: ${errorData.error || 'Unknown error'}`);
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while uploading the file');
             }
+        } else {
+            alert('Please select a file to upload.');
         }
     };
+
 
     return (
         <div className="container mx-auto py-10">

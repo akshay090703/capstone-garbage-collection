@@ -4,11 +4,14 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
-import { Leaf } from "lucide-react"
+import { Leaf, LogIn, LogOut } from "lucide-react"
 import { ThemeToggle } from "./toggle-theme"
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/lib/auth"
 
 export function MainNav() {
     const pathname = usePathname()
+    const { user, logout } = useAuth()
 
     return (
         <div className="mr-4 flex items-center justify-between w-full">
@@ -45,9 +48,37 @@ export function MainNav() {
                     >
                         Upload
                     </Link>
+                    {user && (
+                        <Link
+                            href="/history"
+                            className={cn(
+                                "transition-colors hover:text-green-500",
+                                pathname?.startsWith("/history")
+                                    ? "text-green-500"
+                                    : "text-foreground/60"
+                            )}
+                        >
+                            History
+                        </Link>
+                    )}
                 </nav>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center space-x-4">
+                <ThemeToggle />
+                {user ? (
+                    <Button onClick={logout} variant="outline" size="sm">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </Button>
+                ) : (
+                    <Link href="/login">
+                        <Button variant="outline" size="sm">
+                            <LogIn className="mr-2 h-4 w-4" />
+                            Login
+                        </Button>
+                    </Link>
+                )}
+            </div>
         </div>
     )
 }
