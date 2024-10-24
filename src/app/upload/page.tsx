@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,38 +14,41 @@ import toast, { Toaster } from 'react-hot-toast'
 export default function Upload() {
     const [file, setFile] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
+    const [base64Image, setBase64Image] = useState<string | null>(null) // State to hold the base64 image
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
 
-
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0]
-        console.log(selectedFile);
 
         if (selectedFile) {
             setFile(selectedFile)
             const reader = new FileReader()
             reader.onloadend = () => {
-                setPreview(reader.result as string)
+                setPreview(reader.result as string) // Preview purpose
+                setBase64Image(reader.result as string) // Store base64 image
             }
-            reader.readAsDataURL(selectedFile)
+            reader.readAsDataURL(selectedFile) // This converts to base64
         }
     }
 
+    useEffect(() => {
+        console.log(base64Image);
+    }, [base64Image])
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (file) {
+        if (base64Image) {
             setIsLoading(true)
-            const formData = new FormData()
-            formData.append('file', file)
 
             try {
                 const response = await fetch('http://localhost:5000/predict', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Content-Type': 'application/json'
                     },
-                    body: formData,
+                    body: JSON.stringify({ image: base64Image }), // Send base64 string
                 })
 
                 if (response.ok) {
@@ -79,7 +82,7 @@ export default function Upload() {
                     </CardHeader>
                     <form onSubmit={handleSubmit}>
                         <CardContent>
-                            <div className="grid w-full items-center gap-4">
+                            <div className="relative grid w-full items-center gap-4">
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="image" className="text-lg">Waste Image</Label>
                                     <div className="relative h-64 border-2 border-dashed border-input rounded-lg">
@@ -120,15 +123,6 @@ export default function Upload() {
                     </form>
                 </Card>
             </motion.div>
-            {isLoading && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col items-center">
-                        <Loader2 className="h-12 w-12 text-green-500 animate-spin mb-4" />
-                        <p className="text-lg font-semibold">Analyzing your image...</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">This may take a few moments</p>
-                    </div>
-                </div>
-            )}
         </div>
     )
 }
