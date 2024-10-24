@@ -7,13 +7,14 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
-import { Upload as UploadIcon, Image as ImageIcon } from 'lucide-react'
+import { Upload as UploadIcon, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function Upload() {
     const [file, setFile] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
 
 
@@ -32,12 +33,11 @@ export default function Upload() {
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+        e.preventDefault()
         if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-            console.log(file);
-
+            setIsLoading(true)
+            const formData = new FormData()
+            formData.append('file', file)
 
             try {
                 const response = await fetch('http://localhost:5000/predict', {
@@ -46,26 +46,25 @@ export default function Upload() {
                         'Authorization': 'Bearer ' + localStorage.getItem('token'),
                     },
                     body: formData,
-                });
+                })
 
                 if (response.ok) {
-                    const data = await response.json();
-                    router.push(`/result?predictedClass=${data.material}`);
+                    const data = await response.json()
+                    router.push(`/result?predictedClass=${data.material}`)
                 } else {
-                    const errorData = await response.json(); // Get the error message
-                    // alert(`Failed to classify the image: ${errorData.error || 'Unknown error'}`);
-                    toast.error('Please login first!');
+                    const errorData = await response.json()
+                    toast.error('Please login first!')
                 }
             } catch (error) {
-                console.error('Error:', error);
-                // alert('An error occurred while uploading the file');
-                toast.error('An error occurred while uploading the file');
+                console.error('Error:', error)
+                toast.error('An error occurred while uploading the file')
+            } finally {
+                setIsLoading(false)
             }
         } else {
-            toast.error('Please select a file to upload.');
+            toast.error('Please select a file to upload.')
         }
-    };
-
+    }
 
     return (
         <div className="container mx-auto py-10">
@@ -90,6 +89,7 @@ export default function Upload() {
                                             accept="image/*"
                                             onChange={handleFileChange}
                                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            disabled={isLoading}
                                         />
                                         {preview ? (
                                             <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
@@ -104,13 +104,31 @@ export default function Upload() {
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-center">
-                            <Button type="submit" disabled={!file} className="bg-green-500 hover:bg-green-600 text-white">
-                                <UploadIcon className="mr-2 h-4 w-4" /> Upload and Analyze
+                            <Button type="submit" disabled={!file || isLoading} className="bg-green-500 hover:bg-green-600 text-white">
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Processing...
+                                    </>
+                                ) : (
+                                    <>
+                                        <UploadIcon className="mr-2 h-4 w-4" /> Upload and Analyze
+                                    </>
+                                )}
                             </Button>
                         </CardFooter>
                     </form>
                 </Card>
             </motion.div>
+            {isLoading && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col items-center">
+                        <Loader2 className="h-12 w-12 text-green-500 animate-spin mb-4" />
+                        <p className="text-lg font-semibold">Analyzing your image...</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">This may take a few moments</p>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
