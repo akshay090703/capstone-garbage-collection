@@ -16,8 +16,11 @@ export default function Upload() {
     const [preview, setPreview] = useState<string | null>(null)
     const router = useRouter()
 
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0]
+        console.log(selectedFile);
+
         if (selectedFile) {
             setFile(selectedFile)
             const reader = new FileReader()
@@ -33,6 +36,8 @@ export default function Upload() {
         if (file) {
             const formData = new FormData();
             formData.append('file', file);
+            console.log(file);
+
 
             try {
                 const response = await fetch('http://localhost:5000/predict', {
