@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Recycle, Info, AlertTriangle, CheckCircle2 } from 'lucide-react'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 
 const materialInfo = {
     cardboard: {
@@ -83,7 +83,7 @@ const materialInfo = {
     }
 }
 
-export default function Result() {
+function ResultContent() {
     const searchParams = useSearchParams()
     const predictedClass = searchParams.get('predictedClass') as keyof typeof materialInfo || 'trash'
     const material = materialInfo[predictedClass]
@@ -137,7 +137,7 @@ export default function Result() {
                                         key={index}
                                         className={`p-4 rounded-lg cursor-pointer transition-colors duration-200 ${activeInstruction === index
                                             ? 'bg-blue-200 dark:bg-blue-800'
-                                            : 'bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 dark:hover:bg-blue-900'
+                                            : 'bg-blue-50 dark:hover:bg-blue-900'
                                             }`}
                                         onClick={() => setActiveInstruction(activeInstruction === index ? null : index)}
                                         whileHover={{ scale: 1.02 }}
@@ -194,5 +194,14 @@ export default function Result() {
                 </Card>
             </motion.div>
         </div>
+    )
+}
+
+
+export default function Result() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ResultContent />
+        </Suspense>
     )
 }
