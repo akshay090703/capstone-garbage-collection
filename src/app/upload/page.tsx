@@ -8,8 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
 import { Upload as UploadIcon, Image as ImageIcon, Loader2 } from 'lucide-react'
-import { useAuth } from '@/lib/auth'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
+import Image from 'next/image';
 
 export default function Upload() {
     const [file, setFile] = useState<File | null>(null)
@@ -55,7 +55,6 @@ export default function Upload() {
                     const data = await response.json()
                     router.push(`/result?predictedClass=${data.material}`)
                 } else {
-                    const errorData = await response.json()
                     toast.error('Please login first!')
                 }
             } catch (error) {
@@ -95,7 +94,11 @@ export default function Upload() {
                                             disabled={isLoading}
                                         />
                                         {preview ? (
-                                            <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+                                            <Image src={preview}
+                                                alt="Preview"
+                                                className="w-full h-full object-cover rounded-lg"
+                                                width={500}
+                                                height={500} />
                                         ) : (
                                             <div className="flex flex-col items-center justify-center h-full">
                                                 <ImageIcon className="h-16 w-16 text-muted-foreground" />

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Recycle, Trash2, Info, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Recycle, Info, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { useState } from 'react'
 
 const materialInfo = {

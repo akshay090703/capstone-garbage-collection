@@ -1,20 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { motion } from 'framer-motion'
 import { LogIn } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
-import toast, { Toaster } from 'react-hot-toast';
 
 export function LoginForm() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const router = useRouter()
     const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {

@@ -76,7 +76,6 @@ export default function HistoryPage() {
                 fetchResults()
                 toast.success('Record deleted successfully')
             } else {
-                const errorData = await response.json()
                 toast.error('Failed to delete record')
             }
         } catch (error) {
@@ -102,7 +101,7 @@ export default function HistoryPage() {
             <FileX className="w-24 h-24 text-gray-400 mb-4" />
             <h2 className="text-2xl font-semibold mb-2">No Upload History</h2>
             <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                You haven't uploaded any images for classification yet. Start by uploading an image to see your history here.
+                You haven&apos;t uploaded any images for classification yet. Start by uploading an image to see your history here.
             </p>
             <Button asChild className="bg-green-500 hover:bg-green-600 text-white">
                 <Link href="/upload">
