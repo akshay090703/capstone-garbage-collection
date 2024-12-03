@@ -22,6 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null)
     const router = useRouter()
+    const server = process.env.NEXT_PUBLIC_SERVER_LINK;
 
     useEffect(() => {
         checkAuth()
@@ -31,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
             const token = localStorage.getItem('token');
             if (token) {
-                const response = await fetch('http://localhost:5000/auth/user', {
+                const response = await fetch(`${server}/auth/user`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -55,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = async (email: string, password: string) => {
         try {
-            const response = await fetch('http://localhost:5000/auth/login', {
+            const response = await fetch(`${server}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -80,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const logout = async () => {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/auth/logout', {
+        const response = await fetch(`${server}/auth/logout`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -98,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signup = async (name: string, email: string, password: string) => {
         try {
-            const response = await fetch('http://localhost:5000/auth/signup', {
+            const response = await fetch(`${server}/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password }),

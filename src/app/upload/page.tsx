@@ -42,7 +42,7 @@ export default function Upload() {
             setIsLoading(true)
 
             try {
-                const response = await fetch('http://localhost:5000/predict', {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_LINK}/predict`, {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem('token'),

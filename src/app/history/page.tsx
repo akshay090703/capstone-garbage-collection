@@ -40,7 +40,7 @@ export default function HistoryPage() {
 
     const fetchResults = async () => {
         try {
-            const response = await fetch('http://localhost:5000/history', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_LINK}/history`, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 },
@@ -66,7 +66,7 @@ export default function HistoryPage() {
         console.log(recordId);
 
         try {
-            const response = await fetch(`http://localhost:5000/delete/${recordId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_LINK}/delete/${recordId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token'),
